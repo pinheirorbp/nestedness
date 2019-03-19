@@ -1,0 +1,378 @@
+---
+title: "Appendix S3- Efficiency of metrics to distinguish between binary random and nested networks"
+author: "Pinheiro, R.B.P., Dormann,C.F., Felix, G.M.F, and Mello, M.A.R."
+date: "March 18, 2019"
+output: pdf_document
+---
+
+# METHODS #
+
+In our novel perspective, the main function of a nestedness metric is to distinguish between networks with randomly distributed links (non-significant nestedness, equiprobable null model), networks in which links are partially defined by the node strengths (significant nestedness), and networks in which links are fully determined by node strengths (nested networks, proportional null model). Here, we analyzed the capacity of several indices in distinguishing these topologies.
+
+We produced probability matrices with dimensions: 5x5, 10x10, and 20x20, based on three different marginal probabilities: lognormal, linear decrease, and equiprobable. In Appendix S1 we generated quantitative networks from these probability matrices with fixed total sampling. Here, we produced binary matrices for a more appropriate comparison of binary metrics.
+
+As binary matrices do not present quantitative information we can only fix the connectance. We produced binary networks with connectances: 0.3, 0.5, 0.7, 0.9, 0.92, 0.94, 0.96, and 0.98. For each network we calculated a set of binary nestedness indices (Table 1 in Methods).
+
+Moreover, in analysis of binary matrices, we cannot know the original node probabilities, only node degrees. To inspect the distortion caused by this approximation, for each matrix produced with fixed connectance, we produced a randomized matrix using a proportional algorithm based on node degrees (binary proportional). 
+
+Here we present plots for a graphycal evaluation of the capacity of binary indices to separate between the proportional (lognormal and linear decrease) and the equiprobable null models. We also present values of the binary proportional null model. Indices in the y-axis and connectance on the x-axis. Each plot present median and intervals containing 95% of points. NODF values were divided by 100. For temperature we present 1 minus the raw value divided by 100 (so that it is directly related to nestedness).
+
+
+
+```{r include=F}
+load("results/simulations2.RData")
+load("results/simulations3.RData")
+```
+
+# MATRIX SIZE: 20 x 20
+
+```{r,fig.height=13.3, fig.width=9, echo=F}
+layout(matrix(c(1:6,0,7),4,2,byrow = T))
+par(mar=c(4.2,6,2,1))
+S=20
+indices=c("betasne","betasne_prop","temp","nodf","MD","binSR")
+nam=c(expression(paste(beta,scriptstyle("NES"))),expression(paste(beta,scriptstyle("NES")," / ", beta,scriptstyle("SOR"))),"Temperature","NODF","Manhattan Distance","Binary Spectral Radius")
+for (N in 1:3){
+  index=indices[N]
+  ## log-normal plot
+  MEAN.2=SIM2[[paste("mean.",index,sep="")]][SIM2$size==S&SIM2$PM!="Lin"]
+  UP95.2=SIM2[[paste("q975.",index,sep="")]][SIM2$size==S&SIM2$PM!="Lin"]
+  BOTTOM95.2=SIM2[[paste("q025.",index,sep="")]][SIM2$size==S&SIM2$PM!="Lin"]
+  MEAN.3=SIM3[[paste("mean.",index,sep="")]][SIM3$size==S&SIM3$PM!="Lin"]
+  UP95.3=SIM3[[paste("q975.",index,sep="")]][SIM3$size==S&SIM3$PM!="Lin"]
+  BOTTOM95.3=SIM3[[paste("q025.",index,sep="")]][SIM3$size==S&SIM3$PM!="Lin"]
+  connec=c(.3,.5,.7,.9,.92,.94,.96,.98)
+  if(is.element(index,c("MD","SR","binSR"))){
+    YLIM=c(min(c(MEAN.2,MEAN.3,UP95.2,UP95.3,BOTTOM95.2,BOTTOM95.3),na.rm=T),max(c(MEAN.2,MEAN.3,UP95.2,UP95.3,BOTTOM95.2,BOTTOM95.3),na.rm=T))
+  }else{YLIM=c(0,1)}
+  plot(0,xlim = c(0,1),ylim=YLIM, bty = 'n', type = 'n', xaxt = 'n', yaxt = 'n',pch=NA, xlab="connectance",ylab=nam[N],cex.lab=1.7)
+  box()
+  axis(side = 1,lwd=1,at = connec)
+  axis(side=2,lwd=1)
+  # equi
+  X=!is.na(MEAN.2[9:16])&!is.na(UP95.2[9:16])&!is.na(BOTTOM95.2[9:16])&!is.na(MEAN.3[9:16])&!is.na(UP95.3[9:16])&!is.na(BOTTOM95.3[9:16])&!is.na(MEAN.2[1:8])&!is.na(UP95.2[1:8])&!is.na(BOTTOM95.2[1:8])
+  polygon(x=c(connec[X],rev(connec[X])),y=c(UP95.2[9:16][X],rev(BOTTOM95.2[9:16][X])), border=F,col="#C65C7540")
+  polygon(x=c(connec[X],rev(connec[X])),y=c(UP95.2[1:8][X],rev(BOTTOM95.2[1:8][X])), border=F,col="#56519640")
+  polygon(x=c(connec[X],rev(connec[X])),y=c(UP95.3[1:8][X],rev(BOTTOM95.3[1:8][X])), border=F,col="#614b0140")
+  lines(connec[X],MEAN.2[9:16][X],lwd=2,col="#C65C75FF")
+  lines(connec[X],MEAN.2[1:8][X],lwd=2,col="#565196FF")
+  lines(connec[X],MEAN.3[1:8][X],lwd=2,col="#614b01FF")
+  ## linear decrease plot
+  MEAN.2=SIM2[[paste("mean.",index,sep="")]][SIM2$size==S&SIM2$PM!="Logn"]
+  UP95.2=SIM2[[paste("q975.",index,sep="")]][SIM2$size==S&SIM2$PM!="Logn"]
+  BOTTOM95.2=SIM2[[paste("q025.",index,sep="")]][SIM2$size==S&SIM2$PM!="Logn"]
+  MEAN.3=SIM3[[paste("mean.",index,sep="")]][SIM3$size==S&SIM3$PM!="Logn"]
+  UP95.3=SIM3[[paste("q975.",index,sep="")]][SIM3$size==S&SIM3$PM!="Logn"]
+  BOTTOM95.3=SIM3[[paste("q025.",index,sep="")]][SIM3$size==S&SIM3$PM!="Logn"]
+  connec=c(.3,.5,.7,.9,.92,.94,.96,.98)
+  if(is.element(index,c("MD","SR","binSR"))){
+    YLIM=c(min(c(MEAN.2,MEAN.3,UP95.2,UP95.3,BOTTOM95.2,BOTTOM95.3),na.rm=T),max(c(MEAN.2,MEAN.3,UP95.2,UP95.3,BOTTOM95.2,BOTTOM95.3),na.rm=T))
+  }else{YLIM=c(0,1)}
+  plot(0,xlim = c(0,1),ylim=YLIM, bty = 'n', type = 'n', xaxt = 'n', yaxt = 'n',pch=NA, xlab="connectance",ylab=nam[N],cex.lab=1.7)
+  box()
+  axis(side = 1,lwd=1,at = connec)
+  axis(side=2,lwd=1)
+  # equi
+  X=!is.na(MEAN.2[9:16])&!is.na(UP95.2[9:16])&!is.na(BOTTOM95.2[9:16])&!is.na(MEAN.3[9:16])&!is.na(UP95.3[9:16])&!is.na(BOTTOM95.3[9:16])&!is.na(MEAN.2[1:8])&!is.na(UP95.2[1:8])&!is.na(BOTTOM95.2[1:8])
+  polygon(x=c(connec[X],rev(connec[X])),y=c(UP95.2[9:16][X],rev(BOTTOM95.2[9:16][X])), border=F,col="#C65C7540")
+  polygon(x=c(connec[X],rev(connec[X])),y=c(UP95.2[1:8][X],rev(BOTTOM95.2[1:8][X])), border=F,col="#20550140")
+  polygon(x=c(connec[X],rev(connec[X])),y=c(UP95.3[1:8][X],rev(BOTTOM95.3[1:8][X])), border=F,col="#614b0140")
+  lines(connec[X],MEAN.2[9:16][X],lwd=2,col="#C65C75FF")
+  lines(connec[X],MEAN.2[1:8][X],lwd=2,col="#205501FF")
+  lines(connec[X],MEAN.3[1:8][X],lwd=2,col="#614b01FF")
+}
+plot(NA,xlim = c(0,1),ylim=c(0,1), bty = 'n', type = 'n', xaxt = 'n', yaxt = 'n',pch=NA,ann = F)
+legend(x =0,y=0.9,legend = c("Log-normal","Linear Decrease","Binary Probabilities", "Equiprobable"), col=c("#565196FF","#205501FF","#614b01ff","#C65C75FF"),pch=15,cex=2.5,pt.cex=5,bty = "n")
+```
+
+```{r,fig.height=13.3, fig.width=9, echo=F}
+layout(matrix(c(1:6,0,7),4,2,byrow = T))
+par(mar=c(4.2,6,2,1))
+for (N in 4:6){
+  index=indices[N]
+  ## log-normal plot
+  MEAN.2=SIM2[[paste("mean.",index,sep="")]][SIM2$size==S&SIM2$PM!="Lin"]
+  UP95.2=SIM2[[paste("q975.",index,sep="")]][SIM2$size==S&SIM2$PM!="Lin"]
+  BOTTOM95.2=SIM2[[paste("q025.",index,sep="")]][SIM2$size==S&SIM2$PM!="Lin"]
+  MEAN.3=SIM3[[paste("mean.",index,sep="")]][SIM3$size==S&SIM3$PM!="Lin"]
+  UP95.3=SIM3[[paste("q975.",index,sep="")]][SIM3$size==S&SIM3$PM!="Lin"]
+  BOTTOM95.3=SIM3[[paste("q025.",index,sep="")]][SIM3$size==S&SIM3$PM!="Lin"]
+  connec=c(.3,.5,.7,.9,.92,.94,.96,.98)
+  if(is.element(index,c("MD","SR","binSR"))){
+    YLIM=c(min(c(MEAN.2,MEAN.3,UP95.2,UP95.3,BOTTOM95.2,BOTTOM95.3),na.rm=T),max(c(MEAN.2,MEAN.3,UP95.2,UP95.3,BOTTOM95.2,BOTTOM95.3),na.rm=T))
+  }else{YLIM=c(0,1)}
+  plot(0,xlim = c(0,1),ylim=YLIM, bty = 'n', type = 'n', xaxt = 'n', yaxt = 'n',pch=NA, xlab="connectance",ylab=nam[N],cex.lab=1.7)
+  box()
+  axis(side = 1,lwd=1,at = connec)
+  axis(side=2,lwd=1)
+  # equi
+  X=!is.na(MEAN.2[9:16])&!is.na(UP95.2[9:16])&!is.na(BOTTOM95.2[9:16])&!is.na(MEAN.3[9:16])&!is.na(UP95.3[9:16])&!is.na(BOTTOM95.3[9:16])&!is.na(MEAN.2[1:8])&!is.na(UP95.2[1:8])&!is.na(BOTTOM95.2[1:8])
+  polygon(x=c(connec[X],rev(connec[X])),y=c(UP95.2[9:16][X],rev(BOTTOM95.2[9:16][X])), border=F,col="#C65C7540")
+  polygon(x=c(connec[X],rev(connec[X])),y=c(UP95.2[1:8][X],rev(BOTTOM95.2[1:8][X])), border=F,col="#56519640")
+  polygon(x=c(connec[X],rev(connec[X])),y=c(UP95.3[1:8][X],rev(BOTTOM95.3[1:8][X])), border=F,col="#614b0140")
+  lines(connec[X],MEAN.2[9:16][X],lwd=2,col="#C65C75FF")
+  lines(connec[X],MEAN.2[1:8][X],lwd=2,col="#565196FF")
+  lines(connec[X],MEAN.3[1:8][X],lwd=2,col="#614b01FF")
+  ## linear decrease plot
+  MEAN.2=SIM2[[paste("mean.",index,sep="")]][SIM2$size==S&SIM2$PM!="Logn"]
+  UP95.2=SIM2[[paste("q975.",index,sep="")]][SIM2$size==S&SIM2$PM!="Logn"]
+  BOTTOM95.2=SIM2[[paste("q025.",index,sep="")]][SIM2$size==S&SIM2$PM!="Logn"]
+  MEAN.3=SIM3[[paste("mean.",index,sep="")]][SIM3$size==S&SIM3$PM!="Logn"]
+  UP95.3=SIM3[[paste("q975.",index,sep="")]][SIM3$size==S&SIM3$PM!="Logn"]
+  BOTTOM95.3=SIM3[[paste("q025.",index,sep="")]][SIM3$size==S&SIM3$PM!="Logn"]
+  connec=c(.3,.5,.7,.9,.92,.94,.96,.98)
+  if(is.element(index,c("MD","SR","binSR"))){
+    YLIM=c(min(c(MEAN.2,MEAN.3,UP95.2,UP95.3,BOTTOM95.2,BOTTOM95.3),na.rm=T),max(c(MEAN.2,MEAN.3,UP95.2,UP95.3,BOTTOM95.2,BOTTOM95.3),na.rm=T))
+  }else{YLIM=c(0,1)}
+  plot(0,xlim = c(0,1),ylim=YLIM, bty = 'n', type = 'n', xaxt = 'n', yaxt = 'n',pch=NA, xlab="connectance",ylab=nam[N],cex.lab=1.7)
+  box()
+  axis(side = 1,lwd=1,at = connec)
+  axis(side=2,lwd=1)
+  # equi
+  X=!is.na(MEAN.2[9:16])&!is.na(UP95.2[9:16])&!is.na(BOTTOM95.2[9:16])&!is.na(MEAN.3[9:16])&!is.na(UP95.3[9:16])&!is.na(BOTTOM95.3[9:16])&!is.na(MEAN.2[1:8])&!is.na(UP95.2[1:8])&!is.na(BOTTOM95.2[1:8])
+  polygon(x=c(connec[X],rev(connec[X])),y=c(UP95.2[9:16][X],rev(BOTTOM95.2[9:16][X])), border=F,col="#C65C7540")
+  polygon(x=c(connec[X],rev(connec[X])),y=c(UP95.2[1:8][X],rev(BOTTOM95.2[1:8][X])), border=F,col="#20550140")
+  polygon(x=c(connec[X],rev(connec[X])),y=c(UP95.3[1:8][X],rev(BOTTOM95.3[1:8][X])), border=F,col="#614b0140")
+  lines(connec[X],MEAN.2[9:16][X],lwd=2,col="#C65C75FF")
+  lines(connec[X],MEAN.2[1:8][X],lwd=2,col="#205501FF")
+  lines(connec[X],MEAN.3[1:8][X],lwd=2,col="#614b01FF")
+}
+plot(NA,xlim = c(0,1),ylim=c(0,1), bty = 'n', type = 'n', xaxt = 'n', yaxt = 'n',pch=NA,ann = F)
+legend(x =0,y=0.9,legend = c("Log-normal","Linear Decrease","Binary Probabilities", "Equiprobable"), col=c("#565196FF","#205501FF","#614b01ff","#C65C75FF"),pch=15,cex=2.5,pt.cex=5,bty = "n")
+```
+
+
+# MATRIX SIZE: 10 x 10
+
+```{r,fig.height=13.3, fig.width=9, echo=F}
+layout(matrix(c(1:6,0,7),4,2,byrow = T))
+par(mar=c(4.2,6,2,1))
+S=10
+indices=c("betasne","betasne_prop","temp","nodf","MD","binSR")
+nam=c(expression(paste(beta,scriptstyle("NES"))),expression(paste(beta,scriptstyle("NES")," / ", beta,scriptstyle("SOR"))),"Temperature","NODF","Manhattan Distance","Binary Spectral Radius")
+for (N in 1:3){
+  index=indices[N]
+  ## log-normal plot
+  MEAN.2=SIM2[[paste("mean.",index,sep="")]][SIM2$size==S&SIM2$PM!="Lin"]
+  UP95.2=SIM2[[paste("q975.",index,sep="")]][SIM2$size==S&SIM2$PM!="Lin"]
+  BOTTOM95.2=SIM2[[paste("q025.",index,sep="")]][SIM2$size==S&SIM2$PM!="Lin"]
+  MEAN.3=SIM3[[paste("mean.",index,sep="")]][SIM3$size==S&SIM3$PM!="Lin"]
+  UP95.3=SIM3[[paste("q975.",index,sep="")]][SIM3$size==S&SIM3$PM!="Lin"]
+  BOTTOM95.3=SIM3[[paste("q025.",index,sep="")]][SIM3$size==S&SIM3$PM!="Lin"]
+  connec=c(.3,.5,.7,.9,.92,.94,.96,.98)
+  if(is.element(index,c("MD","SR","binSR"))){
+    YLIM=c(min(c(MEAN.2,MEAN.3,UP95.2,UP95.3,BOTTOM95.2,BOTTOM95.3),na.rm=T),max(c(MEAN.2,MEAN.3,UP95.2,UP95.3,BOTTOM95.2,BOTTOM95.3),na.rm=T))
+  }else{YLIM=c(0,1)}
+  plot(0,xlim = c(0,1),ylim=YLIM, bty = 'n', type = 'n', xaxt = 'n', yaxt = 'n',pch=NA, xlab="connectance",ylab=nam[N],cex.lab=1.7)
+  box()
+  axis(side = 1,lwd=1,at = connec)
+  axis(side=2,lwd=1)
+  # equi
+  X=!is.na(MEAN.2[9:16])&!is.na(UP95.2[9:16])&!is.na(BOTTOM95.2[9:16])&!is.na(MEAN.3[9:16])&!is.na(UP95.3[9:16])&!is.na(BOTTOM95.3[9:16])&!is.na(MEAN.2[1:8])&!is.na(UP95.2[1:8])&!is.na(BOTTOM95.2[1:8])
+  polygon(x=c(connec[X],rev(connec[X])),y=c(UP95.2[9:16][X],rev(BOTTOM95.2[9:16][X])), border=F,col="#C65C7540")
+  polygon(x=c(connec[X],rev(connec[X])),y=c(UP95.2[1:8][X],rev(BOTTOM95.2[1:8][X])), border=F,col="#56519640")
+  polygon(x=c(connec[X],rev(connec[X])),y=c(UP95.3[1:8][X],rev(BOTTOM95.3[1:8][X])), border=F,col="#614b0140")
+  lines(connec[X],MEAN.2[9:16][X],lwd=2,col="#C65C75FF")
+  lines(connec[X],MEAN.2[1:8][X],lwd=2,col="#565196FF")
+  lines(connec[X],MEAN.3[1:8][X],lwd=2,col="#614b01FF")
+  ## linear decrease plot
+  MEAN.2=SIM2[[paste("mean.",index,sep="")]][SIM2$size==S&SIM2$PM!="Logn"]
+  UP95.2=SIM2[[paste("q975.",index,sep="")]][SIM2$size==S&SIM2$PM!="Logn"]
+  BOTTOM95.2=SIM2[[paste("q025.",index,sep="")]][SIM2$size==S&SIM2$PM!="Logn"]
+  MEAN.3=SIM3[[paste("mean.",index,sep="")]][SIM3$size==S&SIM3$PM!="Logn"]
+  UP95.3=SIM3[[paste("q975.",index,sep="")]][SIM3$size==S&SIM3$PM!="Logn"]
+  BOTTOM95.3=SIM3[[paste("q025.",index,sep="")]][SIM3$size==S&SIM3$PM!="Logn"]
+  connec=c(.3,.5,.7,.9,.92,.94,.96,.98)
+  if(is.element(index,c("MD","SR","binSR"))){
+    YLIM=c(min(c(MEAN.2,MEAN.3,UP95.2,UP95.3,BOTTOM95.2,BOTTOM95.3),na.rm=T),max(c(MEAN.2,MEAN.3,UP95.2,UP95.3,BOTTOM95.2,BOTTOM95.3),na.rm=T))
+  }else{YLIM=c(0,1)}
+  plot(0,xlim = c(0,1),ylim=YLIM, bty = 'n', type = 'n', xaxt = 'n', yaxt = 'n',pch=NA, xlab="connectance",ylab=nam[N],cex.lab=1.7)
+  box()
+  axis(side = 1,lwd=1,at = connec)
+  axis(side=2,lwd=1)
+  # equi
+  X=!is.na(MEAN.2[9:16])&!is.na(UP95.2[9:16])&!is.na(BOTTOM95.2[9:16])&!is.na(MEAN.3[9:16])&!is.na(UP95.3[9:16])&!is.na(BOTTOM95.3[9:16])&!is.na(MEAN.2[1:8])&!is.na(UP95.2[1:8])&!is.na(BOTTOM95.2[1:8])
+  polygon(x=c(connec[X],rev(connec[X])),y=c(UP95.2[9:16][X],rev(BOTTOM95.2[9:16][X])), border=F,col="#C65C7540")
+  polygon(x=c(connec[X],rev(connec[X])),y=c(UP95.2[1:8][X],rev(BOTTOM95.2[1:8][X])), border=F,col="#20550140")
+  polygon(x=c(connec[X],rev(connec[X])),y=c(UP95.3[1:8][X],rev(BOTTOM95.3[1:8][X])), border=F,col="#614b0140")
+  lines(connec[X],MEAN.2[9:16][X],lwd=2,col="#C65C75FF")
+  lines(connec[X],MEAN.2[1:8][X],lwd=2,col="#205501FF")
+  lines(connec[X],MEAN.3[1:8][X],lwd=2,col="#614b01FF")
+}
+plot(NA,xlim = c(0,1),ylim=c(0,1), bty = 'n', type = 'n', xaxt = 'n', yaxt = 'n',pch=NA,ann = F)
+legend(x =0,y=0.9,legend = c("Log-normal","Linear Decrease","Binary Probabilities", "Equiprobable"), col=c("#565196FF","#205501FF","#614b01ff","#C65C75FF"),pch=15,cex=2.5,pt.cex=5,bty = "n")
+```
+
+```{r,fig.height=13.3, fig.width=9, echo=F}
+layout(matrix(c(1:6,0,7),4,2,byrow = T))
+par(mar=c(4.2,6,2,1))
+for (N in 4:6){
+  index=indices[N]
+  ## log-normal plot
+  MEAN.2=SIM2[[paste("mean.",index,sep="")]][SIM2$size==S&SIM2$PM!="Lin"]
+  UP95.2=SIM2[[paste("q975.",index,sep="")]][SIM2$size==S&SIM2$PM!="Lin"]
+  BOTTOM95.2=SIM2[[paste("q025.",index,sep="")]][SIM2$size==S&SIM2$PM!="Lin"]
+  MEAN.3=SIM3[[paste("mean.",index,sep="")]][SIM3$size==S&SIM3$PM!="Lin"]
+  UP95.3=SIM3[[paste("q975.",index,sep="")]][SIM3$size==S&SIM3$PM!="Lin"]
+  BOTTOM95.3=SIM3[[paste("q025.",index,sep="")]][SIM3$size==S&SIM3$PM!="Lin"]
+  connec=c(.3,.5,.7,.9,.92,.94,.96,.98)
+  if(is.element(index,c("MD","SR","binSR"))){
+    YLIM=c(min(c(MEAN.2,MEAN.3,UP95.2,UP95.3,BOTTOM95.2,BOTTOM95.3),na.rm=T),max(c(MEAN.2,MEAN.3,UP95.2,UP95.3,BOTTOM95.2,BOTTOM95.3),na.rm=T))
+  }else{YLIM=c(0,1)}
+  plot(0,xlim = c(0,1),ylim=YLIM, bty = 'n', type = 'n', xaxt = 'n', yaxt = 'n',pch=NA, xlab="connectance",ylab=nam[N],cex.lab=1.7)
+  box()
+  axis(side = 1,lwd=1,at = connec)
+  axis(side=2,lwd=1)
+  # equi
+  X=!is.na(MEAN.2[9:16])&!is.na(UP95.2[9:16])&!is.na(BOTTOM95.2[9:16])&!is.na(MEAN.3[9:16])&!is.na(UP95.3[9:16])&!is.na(BOTTOM95.3[9:16])&!is.na(MEAN.2[1:8])&!is.na(UP95.2[1:8])&!is.na(BOTTOM95.2[1:8])
+  polygon(x=c(connec[X],rev(connec[X])),y=c(UP95.2[9:16][X],rev(BOTTOM95.2[9:16][X])), border=F,col="#C65C7540")
+  polygon(x=c(connec[X],rev(connec[X])),y=c(UP95.2[1:8][X],rev(BOTTOM95.2[1:8][X])), border=F,col="#56519640")
+  polygon(x=c(connec[X],rev(connec[X])),y=c(UP95.3[1:8][X],rev(BOTTOM95.3[1:8][X])), border=F,col="#614b0140")
+  lines(connec[X],MEAN.2[9:16][X],lwd=2,col="#C65C75FF")
+  lines(connec[X],MEAN.2[1:8][X],lwd=2,col="#565196FF")
+  lines(connec[X],MEAN.3[1:8][X],lwd=2,col="#614b01FF")
+  ## linear decrease plot
+  MEAN.2=SIM2[[paste("mean.",index,sep="")]][SIM2$size==S&SIM2$PM!="Logn"]
+  UP95.2=SIM2[[paste("q975.",index,sep="")]][SIM2$size==S&SIM2$PM!="Logn"]
+  BOTTOM95.2=SIM2[[paste("q025.",index,sep="")]][SIM2$size==S&SIM2$PM!="Logn"]
+  MEAN.3=SIM3[[paste("mean.",index,sep="")]][SIM3$size==S&SIM3$PM!="Logn"]
+  UP95.3=SIM3[[paste("q975.",index,sep="")]][SIM3$size==S&SIM3$PM!="Logn"]
+  BOTTOM95.3=SIM3[[paste("q025.",index,sep="")]][SIM3$size==S&SIM3$PM!="Logn"]
+  connec=c(.3,.5,.7,.9,.92,.94,.96,.98)
+  if(is.element(index,c("MD","SR","binSR"))){
+    YLIM=c(min(c(MEAN.2,MEAN.3,UP95.2,UP95.3,BOTTOM95.2,BOTTOM95.3),na.rm=T),max(c(MEAN.2,MEAN.3,UP95.2,UP95.3,BOTTOM95.2,BOTTOM95.3),na.rm=T))
+  }else{YLIM=c(0,1)}
+  plot(0,xlim = c(0,1),ylim=YLIM, bty = 'n', type = 'n', xaxt = 'n', yaxt = 'n',pch=NA, xlab="connectance",ylab=nam[N],cex.lab=1.7)
+  box()
+  axis(side = 1,lwd=1,at = connec)
+  axis(side=2,lwd=1)
+  # equi
+  X=!is.na(MEAN.2[9:16])&!is.na(UP95.2[9:16])&!is.na(BOTTOM95.2[9:16])&!is.na(MEAN.3[9:16])&!is.na(UP95.3[9:16])&!is.na(BOTTOM95.3[9:16])&!is.na(MEAN.2[1:8])&!is.na(UP95.2[1:8])&!is.na(BOTTOM95.2[1:8])
+  polygon(x=c(connec[X],rev(connec[X])),y=c(UP95.2[9:16][X],rev(BOTTOM95.2[9:16][X])), border=F,col="#C65C7540")
+  polygon(x=c(connec[X],rev(connec[X])),y=c(UP95.2[1:8][X],rev(BOTTOM95.2[1:8][X])), border=F,col="#20550140")
+  polygon(x=c(connec[X],rev(connec[X])),y=c(UP95.3[1:8][X],rev(BOTTOM95.3[1:8][X])), border=F,col="#614b0140")
+  lines(connec[X],MEAN.2[9:16][X],lwd=2,col="#C65C75FF")
+  lines(connec[X],MEAN.2[1:8][X],lwd=2,col="#205501FF")
+  lines(connec[X],MEAN.3[1:8][X],lwd=2,col="#614b01FF")
+}
+plot(NA,xlim = c(0,1),ylim=c(0,1), bty = 'n', type = 'n', xaxt = 'n', yaxt = 'n',pch=NA,ann = F)
+legend(x =0,y=0.9,legend = c("Log-normal","Linear Decrease","Binary Probabilities", "Equiprobable"), col=c("#565196FF","#205501FF","#614b01ff","#C65C75FF"),pch=15,cex=2.5,pt.cex=5,bty = "n")
+```
+
+
+# MATRIX SIZE: 5 x 5
+
+```{r,fig.height=13.3, fig.width=9, echo=F}
+layout(matrix(c(1:6,0,7),4,2,byrow = T))
+par(mar=c(4.2,6,2,1))
+S=5
+indices=c("betasne","betasne_prop","temp","nodf","MD","binSR")
+nam=c(expression(paste(beta,scriptstyle("NES"))),expression(paste(beta,scriptstyle("NES")," / ", beta,scriptstyle("SOR"))),"Temperature","NODF","Manhattan Distance","Binary Spectral Radius")
+for (N in 1:3){
+  index=indices[N]
+  ## log-normal plot
+  MEAN.2=SIM2[[paste("mean.",index,sep="")]][SIM2$size==S&SIM2$PM!="Lin"]
+  UP95.2=SIM2[[paste("q975.",index,sep="")]][SIM2$size==S&SIM2$PM!="Lin"]
+  BOTTOM95.2=SIM2[[paste("q025.",index,sep="")]][SIM2$size==S&SIM2$PM!="Lin"]
+  MEAN.3=SIM3[[paste("mean.",index,sep="")]][SIM3$size==S&SIM3$PM!="Lin"]
+  UP95.3=SIM3[[paste("q975.",index,sep="")]][SIM3$size==S&SIM3$PM!="Lin"]
+  BOTTOM95.3=SIM3[[paste("q025.",index,sep="")]][SIM3$size==S&SIM3$PM!="Lin"]
+  connec=c(.3,.5,.7,.9,.92,.94,.96,.98)
+  if(is.element(index,c("MD","SR","binSR"))){
+    YLIM=c(min(c(MEAN.2,MEAN.3,UP95.2,UP95.3,BOTTOM95.2,BOTTOM95.3),na.rm=T),max(c(MEAN.2,MEAN.3,UP95.2,UP95.3,BOTTOM95.2,BOTTOM95.3),na.rm=T))
+  }else{YLIM=c(0,1)}
+  plot(0,xlim = c(0,1),ylim=YLIM, bty = 'n', type = 'n', xaxt = 'n', yaxt = 'n',pch=NA, xlab="connectance",ylab=nam[N],cex.lab=1.7)
+  box()
+  axis(side = 1,lwd=1,at = connec)
+  axis(side=2,lwd=1)
+  # equi
+  X=!is.na(MEAN.2[9:16])&!is.na(UP95.2[9:16])&!is.na(BOTTOM95.2[9:16])&!is.na(MEAN.3[9:16])&!is.na(UP95.3[9:16])&!is.na(BOTTOM95.3[9:16])&!is.na(MEAN.2[1:8])&!is.na(UP95.2[1:8])&!is.na(BOTTOM95.2[1:8])
+  polygon(x=c(connec[X],rev(connec[X])),y=c(UP95.2[9:16][X],rev(BOTTOM95.2[9:16][X])), border=F,col="#C65C7540")
+  polygon(x=c(connec[X],rev(connec[X])),y=c(UP95.2[1:8][X],rev(BOTTOM95.2[1:8][X])), border=F,col="#56519640")
+  polygon(x=c(connec[X],rev(connec[X])),y=c(UP95.3[1:8][X],rev(BOTTOM95.3[1:8][X])), border=F,col="#614b0140")
+  lines(connec[X],MEAN.2[9:16][X],lwd=2,col="#C65C75FF")
+  lines(connec[X],MEAN.2[1:8][X],lwd=2,col="#565196FF")
+  lines(connec[X],MEAN.3[1:8][X],lwd=2,col="#614b01FF")
+  ## linear decrease plot
+  MEAN.2=SIM2[[paste("mean.",index,sep="")]][SIM2$size==S&SIM2$PM!="Logn"]
+  UP95.2=SIM2[[paste("q975.",index,sep="")]][SIM2$size==S&SIM2$PM!="Logn"]
+  BOTTOM95.2=SIM2[[paste("q025.",index,sep="")]][SIM2$size==S&SIM2$PM!="Logn"]
+  MEAN.3=SIM3[[paste("mean.",index,sep="")]][SIM3$size==S&SIM3$PM!="Logn"]
+  UP95.3=SIM3[[paste("q975.",index,sep="")]][SIM3$size==S&SIM3$PM!="Logn"]
+  BOTTOM95.3=SIM3[[paste("q025.",index,sep="")]][SIM3$size==S&SIM3$PM!="Logn"]
+  connec=c(.3,.5,.7,.9,.92,.94,.96,.98)
+  if(is.element(index,c("MD","SR","binSR"))){
+    YLIM=c(min(c(MEAN.2,MEAN.3,UP95.2,UP95.3,BOTTOM95.2,BOTTOM95.3),na.rm=T),max(c(MEAN.2,MEAN.3,UP95.2,UP95.3,BOTTOM95.2,BOTTOM95.3),na.rm=T))
+  }else{YLIM=c(0,1)}
+  plot(0,xlim = c(0,1),ylim=YLIM, bty = 'n', type = 'n', xaxt = 'n', yaxt = 'n',pch=NA, xlab="connectance",ylab=nam[N],cex.lab=1.7)
+  box()
+  axis(side = 1,lwd=1,at = connec)
+  axis(side=2,lwd=1)
+  # equi
+  X=!is.na(MEAN.2[9:16])&!is.na(UP95.2[9:16])&!is.na(BOTTOM95.2[9:16])&!is.na(MEAN.3[9:16])&!is.na(UP95.3[9:16])&!is.na(BOTTOM95.3[9:16])&!is.na(MEAN.2[1:8])&!is.na(UP95.2[1:8])&!is.na(BOTTOM95.2[1:8])
+  polygon(x=c(connec[X],rev(connec[X])),y=c(UP95.2[9:16][X],rev(BOTTOM95.2[9:16][X])), border=F,col="#C65C7540")
+  polygon(x=c(connec[X],rev(connec[X])),y=c(UP95.2[1:8][X],rev(BOTTOM95.2[1:8][X])), border=F,col="#20550140")
+  polygon(x=c(connec[X],rev(connec[X])),y=c(UP95.3[1:8][X],rev(BOTTOM95.3[1:8][X])), border=F,col="#614b0140")
+  lines(connec[X],MEAN.2[9:16][X],lwd=2,col="#C65C75FF")
+  lines(connec[X],MEAN.2[1:8][X],lwd=2,col="#205501FF")
+  lines(connec[X],MEAN.3[1:8][X],lwd=2,col="#614b01FF")
+}
+plot(NA,xlim = c(0,1),ylim=c(0,1), bty = 'n', type = 'n', xaxt = 'n', yaxt = 'n',pch=NA,ann = F)
+legend(x =0,y=0.9,legend = c("Log-normal","Linear Decrease","Binary Probabilities", "Equiprobable"), col=c("#565196FF","#205501FF","#614b01ff","#C65C75FF"),pch=15,cex=2.5,pt.cex=5,bty = "n")
+```
+
+```{r,fig.height=13.3, fig.width=9, echo=F}
+layout(matrix(c(1:6,0,7),4,2,byrow = T))
+par(mar=c(4.2,6,2,1))
+for (N in 4:6){
+  index=indices[N]
+  ## log-normal plot
+  MEAN.2=SIM2[[paste("mean.",index,sep="")]][SIM2$size==S&SIM2$PM!="Lin"]
+  UP95.2=SIM2[[paste("q975.",index,sep="")]][SIM2$size==S&SIM2$PM!="Lin"]
+  BOTTOM95.2=SIM2[[paste("q025.",index,sep="")]][SIM2$size==S&SIM2$PM!="Lin"]
+  MEAN.3=SIM3[[paste("mean.",index,sep="")]][SIM3$size==S&SIM3$PM!="Lin"]
+  UP95.3=SIM3[[paste("q975.",index,sep="")]][SIM3$size==S&SIM3$PM!="Lin"]
+  BOTTOM95.3=SIM3[[paste("q025.",index,sep="")]][SIM3$size==S&SIM3$PM!="Lin"]
+  connec=c(.3,.5,.7,.9,.92,.94,.96,.98)
+  if(is.element(index,c("MD","SR","binSR"))){
+    YLIM=c(min(c(MEAN.2,MEAN.3,UP95.2,UP95.3,BOTTOM95.2,BOTTOM95.3),na.rm=T),max(c(MEAN.2,MEAN.3,UP95.2,UP95.3,BOTTOM95.2,BOTTOM95.3),na.rm=T))
+  }else{YLIM=c(0,1)}
+  plot(0,xlim = c(0,1),ylim=YLIM, bty = 'n', type = 'n', xaxt = 'n', yaxt = 'n',pch=NA, xlab="connectance",ylab=nam[N],cex.lab=1.7)
+  box()
+  axis(side = 1,lwd=1,at = connec)
+  axis(side=2,lwd=1)
+  # equi
+  X=!is.na(MEAN.2[9:16])&!is.na(UP95.2[9:16])&!is.na(BOTTOM95.2[9:16])&!is.na(MEAN.3[9:16])&!is.na(UP95.3[9:16])&!is.na(BOTTOM95.3[9:16])&!is.na(MEAN.2[1:8])&!is.na(UP95.2[1:8])&!is.na(BOTTOM95.2[1:8])
+  polygon(x=c(connec[X],rev(connec[X])),y=c(UP95.2[9:16][X],rev(BOTTOM95.2[9:16][X])), border=F,col="#C65C7540")
+  polygon(x=c(connec[X],rev(connec[X])),y=c(UP95.2[1:8][X],rev(BOTTOM95.2[1:8][X])), border=F,col="#56519640")
+  polygon(x=c(connec[X],rev(connec[X])),y=c(UP95.3[1:8][X],rev(BOTTOM95.3[1:8][X])), border=F,col="#614b0140")
+  lines(connec[X],MEAN.2[9:16][X],lwd=2,col="#C65C75FF")
+  lines(connec[X],MEAN.2[1:8][X],lwd=2,col="#565196FF")
+  lines(connec[X],MEAN.3[1:8][X],lwd=2,col="#614b01FF")
+  ## linear decrease plot
+  MEAN.2=SIM2[[paste("mean.",index,sep="")]][SIM2$size==S&SIM2$PM!="Logn"]
+  UP95.2=SIM2[[paste("q975.",index,sep="")]][SIM2$size==S&SIM2$PM!="Logn"]
+  BOTTOM95.2=SIM2[[paste("q025.",index,sep="")]][SIM2$size==S&SIM2$PM!="Logn"]
+  MEAN.3=SIM3[[paste("mean.",index,sep="")]][SIM3$size==S&SIM3$PM!="Logn"]
+  UP95.3=SIM3[[paste("q975.",index,sep="")]][SIM3$size==S&SIM3$PM!="Logn"]
+  BOTTOM95.3=SIM3[[paste("q025.",index,sep="")]][SIM3$size==S&SIM3$PM!="Logn"]
+  connec=c(.3,.5,.7,.9,.92,.94,.96,.98)
+  if(is.element(index,c("MD","SR","binSR"))){
+    YLIM=c(min(c(MEAN.2,MEAN.3,UP95.2,UP95.3,BOTTOM95.2,BOTTOM95.3),na.rm=T),max(c(MEAN.2,MEAN.3,UP95.2,UP95.3,BOTTOM95.2,BOTTOM95.3),na.rm=T))
+  }else{YLIM=c(0,1)}
+  plot(0,xlim = c(0,1),ylim=YLIM, bty = 'n', type = 'n', xaxt = 'n', yaxt = 'n',pch=NA, xlab="connectance",ylab=nam[N],cex.lab=1.7)
+  box()
+  axis(side = 1,lwd=1,at = connec)
+  axis(side=2,lwd=1)
+  # equi
+  X=!is.na(MEAN.2[9:16])&!is.na(UP95.2[9:16])&!is.na(BOTTOM95.2[9:16])&!is.na(MEAN.3[9:16])&!is.na(UP95.3[9:16])&!is.na(BOTTOM95.3[9:16])&!is.na(MEAN.2[1:8])&!is.na(UP95.2[1:8])&!is.na(BOTTOM95.2[1:8])
+  polygon(x=c(connec[X],rev(connec[X])),y=c(UP95.2[9:16][X],rev(BOTTOM95.2[9:16][X])), border=F,col="#C65C7540")
+  polygon(x=c(connec[X],rev(connec[X])),y=c(UP95.2[1:8][X],rev(BOTTOM95.2[1:8][X])), border=F,col="#20550140")
+  polygon(x=c(connec[X],rev(connec[X])),y=c(UP95.3[1:8][X],rev(BOTTOM95.3[1:8][X])), border=F,col="#614b0140")
+  lines(connec[X],MEAN.2[9:16][X],lwd=2,col="#C65C75FF")
+  lines(connec[X],MEAN.2[1:8][X],lwd=2,col="#205501FF")
+  lines(connec[X],MEAN.3[1:8][X],lwd=2,col="#614b01FF")
+}
+plot(NA,xlim = c(0,1),ylim=c(0,1), bty = 'n', type = 'n', xaxt = 'n', yaxt = 'n',pch=NA,ann = F)
+legend(x =0,y=0.9,legend = c("Log-normal","Linear Decrease","Binary Probabilities", "Equiprobable"), col=c("#565196FF","#205501FF","#614b01ff","#C65C75FF"),pch=15,cex=2.5,pt.cex=5,bty = "n")
+```

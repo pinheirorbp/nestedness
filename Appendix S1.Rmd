@@ -1,0 +1,230 @@
+---
+title: "Appendix S2 - Efficiency of metrics to distinguish between quantitative random and nested networks"
+author: "Pinheiro, R.B.P., Dormann,C.F., Felix, G.M.F, and Mello, M.A.R."
+date: "March 18, 2019"
+output: pdf_document
+---
+
+```{r include=F}
+load("results/simulations1.RData")
+```
+# METHODS #
+
+In our novel perspective, the main function of a nestedness metric is to distinguish between networks with randomly distributed links (non-significant nestedness, equiprobable null model), networks in which links are partially defined by the node strengths (significant nestedness), and networks in which links are fully determined by node strengths (nested networks, proportional null model). Here, we analyzed the capacity of several indices in distinguishing these topologies.
+
+We produced probability matrices with dimensions: 5x5, 10x10, and 20x20, based on three different marginal probabilities: lognormal, linear decrease, and equiprobable. Then, we generated networks from these probability matrices with different total samplings: 50, 100, 200, 400, 800, 1600, 3200, and 6400. For each unique setup we produced 10,000 networks. For each network we calculated a set of nestedness indices (Table 1 in Methods).
+
+In this analysis we used both quantitative and binary indices. However, the models were always produced using the quantitative information, and indices are compared between networks with fixed sampling (instead of connectance). For a comparison of binary indices in networks with fixed connectances, see Appendix S2.
+
+Here we present plots for a graphycal evaluation of the capacity of binary indices to separate between the proportional (lognormal and linear decrease) and the equiprobable null models. Indices in the y-axis and sampling (total weights on the network) on the x-axis. Each plot present median and intervals containing 95% of points. NODF, WNODF and WNODA values were divided by 100. For temperature we present 1 minus the raw value divided by 100 (so that it is directly related to nestedness).
+
+# MATRIX SIZE: 20 x 20
+
+## Quantitative indices
+
+```{r,fig.height=7, fig.width=9, echo=F}
+layout(matrix(c(1:4),2,2,byrow = T))
+par(mar=c(4.2,6,2,1))
+S=20
+indices=c("wnodf","wnoda","SR")
+nam=c("WNODF","WNODA","Spectral Radius")
+for (N in 1:3){
+  index=indices[N]
+  MEAN=SIM1[[paste("mean.",index,sep="")]][SIM1$size==S]
+  UP95=SIM1[[paste("q975.",index,sep="")]][SIM1$size==S]
+  BOTTOM95=SIM1[[paste("q025.",index,sep="")]][SIM1$size==S]
+  if(is.element(index,c("MD","SR","binSR"))){
+    YLIM=c(min(c(MEAN,UP95,BOTTOM95),na.rm=T),max(c(MEAN,UP95,BOTTOM95),na.rm=T))
+  }else{YLIM=c(0,1)}
+  plot(0,xlim = c(0.5,8),ylim=YLIM, bty = 'n', type = 'n', xaxt = 'n', yaxt = 'n',pch=NA, xlab="sampling",ylab=nam[N],cex.lab=1.7)
+  box()
+  axis(side = 1,lwd=1,at = 1:8,labels = c("50","100","200","400","800","1600","3200","6400"))
+  axis(side=2,lwd=1)
+  COLS=c("#565196FF","#205501FF","#C65C75FF")
+  COLS2=c("#56519640","#20550140","#C65C7540")
+  for (i in 1:3){
+    PMs=unique(SIM1$PM)
+    P=SIM1$PM[SIM1$size==S]==PMs[i]
+    X=!is.na(MEAN[P])&!is.na(UP95[P])&!is.na(BOTTOM95[P])
+    polygon(x=c((1:8)[X],rev((1:8)[X])),y=c(UP95[P][X],rev(BOTTOM95[P][X])), border=F,col=COLS2[i])
+    lines((1:8)[X],MEAN[P][X],lwd=2,col=COLS[i])
+  }
+}
+plot(NA,xlim = c(0,1),ylim=c(0,1), bty = 'n', type = 'n', xaxt = 'n', yaxt = 'n',pch=NA,ann = F)
+legend(x =0,y=0.8,legend = c("Log-normal","Linear Decrease","Equiprobable"),col=c(COLS[1],COLS[2],COLS[3]),pch=15,cex=2.5,pt.cex=5,bty = "n")
+```
+
+## Binary indices
+
+```{r,fig.height=13.3, fig.width=9, echo=F}
+layout(matrix(c(1:6,0,7),4,2,byrow = T))
+par(mar=c(4.2,6,2,1))
+S=20
+indices=c("betasne","betasne_prop","temp","nodf","MD","binSR")
+nam=c(expression(paste(beta,scriptstyle("NES"))), expression(paste(beta,scriptstyle("NES")," / ", beta,scriptstyle("SOR"))),"Temperature","NODF","Manhattan Distance","Binary Spectral Radius")
+for (N in 1:6){
+  index=indices[N]
+  MEAN=SIM1[[paste("mean.",index,sep="")]][SIM1$size==S]
+  UP95=SIM1[[paste("q975.",index,sep="")]][SIM1$size==S]
+  BOTTOM95=SIM1[[paste("q025.",index,sep="")]][SIM1$size==S]
+  if(is.element(index,c("MD","SR","binSR"))){
+    YLIM=c(min(c(MEAN,UP95,BOTTOM95),na.rm=T),max(c(MEAN,UP95,BOTTOM95),na.rm=T))
+  }else{YLIM=c(0,1)}
+  plot(0,xlim = c(0.5,8),ylim=YLIM, bty = 'n', type = 'n', xaxt = 'n', yaxt = 'n',pch=NA, xlab="sampling",ylab=nam[N],cex.lab=1.7)
+  box()
+  axis(side = 1,lwd=1,at = 1:8,labels = c("50","100","200","400","800","1600","3200","6400"))
+  axis(side=2,lwd=1)
+  COLS=c("#565196FF","#205501FF","#C65C75FF")
+  COLS2=c("#56519640","#20550140","#C65C7540")
+  for (i in 1:3){
+    PMs=unique(SIM1$PM)
+    P=SIM1$PM[SIM1$size==S]==PMs[i]
+    X=!is.na(MEAN[P])&!is.na(UP95[P])&!is.na(BOTTOM95[P])
+    polygon(x=c((1:8)[X],rev((1:8)[X])),y=c(UP95[P][X],rev(BOTTOM95[P][X])), border=F,col=COLS2[i])
+    lines((1:8)[X],MEAN[P][X],lwd=2,col=COLS[i])
+  }
+}
+plot(NA,xlim = c(0,1),ylim=c(0,1), bty = 'n', type = 'n', xaxt = 'n', yaxt = 'n',pch=NA,ann = F)
+legend(x =0,y=0.8,legend = c("Log-normal","Linear Decrease","Equiprobable"),col=c(COLS[1],COLS[2],COLS[3]),pch=15,cex=2.5,pt.cex=5,bty = "n")
+```
+
+# MATRIX SIZE: 10 x 10
+
+## Quantitative indices
+
+```{r,fig.height=7, fig.width=9, echo=F}
+layout(matrix(c(1:4),2,2,byrow = T))
+par(mar=c(4.2,6,2,1))
+S=10
+indices=c("wnodf","wnoda","SR")
+nam=c("WNODF","WNODA","Spectral Radius")
+for (N in 1:3){
+  index=indices[N]
+  MEAN=SIM1[[paste("mean.",index,sep="")]][SIM1$size==S]
+  UP95=SIM1[[paste("q975.",index,sep="")]][SIM1$size==S]
+  BOTTOM95=SIM1[[paste("q025.",index,sep="")]][SIM1$size==S]
+  if(is.element(index,c("MD","SR","binSR"))){
+    YLIM=c(min(c(MEAN,UP95,BOTTOM95),na.rm=T),max(c(MEAN,UP95,BOTTOM95),na.rm=T))
+  }else{YLIM=c(0,1)}
+  plot(0,xlim = c(0.5,8),ylim=YLIM, bty = 'n', type = 'n', xaxt = 'n', yaxt = 'n',pch=NA, xlab="sampling",ylab=nam[N],cex.lab=1.7)
+  box()
+  axis(side = 1,lwd=1,at = 1:8,labels = c("50","100","200","400","800","1600","3200","6400"))
+  axis(side=2,lwd=1)
+  COLS=c("#565196FF","#205501FF","#C65C75FF")
+  COLS2=c("#56519640","#20550140","#C65C7540")
+  for (i in 1:3){
+    PMs=unique(SIM1$PM)
+    P=SIM1$PM[SIM1$size==S]==PMs[i]
+    X=!is.na(MEAN[P])&!is.na(UP95[P])&!is.na(BOTTOM95[P])
+    polygon(x=c((1:8)[X],rev((1:8)[X])),y=c(UP95[P][X],rev(BOTTOM95[P][X])), border=F,col=COLS2[i])
+    lines((1:8)[X],MEAN[P][X],lwd=2,col=COLS[i])
+  }
+}
+plot(NA,xlim = c(0,1),ylim=c(0,1), bty = 'n', type = 'n', xaxt = 'n', yaxt = 'n',pch=NA,ann = F)
+legend(x =0,y=0.8,legend = c("Log-normal","Linear Decrease","Equiprobable"),col=c(COLS[1],COLS[2],COLS[3]),pch=15,cex=2.5,pt.cex=5,bty = "n")
+```
+
+## Binary indices
+
+```{r,fig.height=13.3, fig.width=9, echo=F}
+layout(matrix(c(1:6,0,7),4,2,byrow = T))
+par(mar=c(4.2,6,2,1))
+S=10
+indices=c("betasne","betasne_prop","temp","nodf","MD","binSR")
+nam=c(expression(paste(beta,scriptstyle("NES"))), expression(paste(beta,scriptstyle("NES")," / ", beta,scriptstyle("SOR"))),"Temperature","NODF","Manhattan Distance","Binary Spectral Radius")
+for (N in 1:6){
+  index=indices[N]
+  MEAN=SIM1[[paste("mean.",index,sep="")]][SIM1$size==S]
+  UP95=SIM1[[paste("q975.",index,sep="")]][SIM1$size==S]
+  BOTTOM95=SIM1[[paste("q025.",index,sep="")]][SIM1$size==S]
+  if(is.element(index,c("MD","SR","binSR"))){
+    YLIM=c(min(c(MEAN,UP95,BOTTOM95),na.rm=T),max(c(MEAN,UP95,BOTTOM95),na.rm=T))
+  }else{YLIM=c(0,1)}
+  plot(0,xlim = c(0.5,8),ylim=YLIM, bty = 'n', type = 'n', xaxt = 'n', yaxt = 'n',pch=NA, xlab="sampling",ylab=nam[N],cex.lab=1.7)
+  box()
+  axis(side = 1,lwd=1,at = 1:8,labels = c("50","100","200","400","800","1600","3200","6400"))
+  axis(side=2,lwd=1)
+  COLS=c("#565196FF","#205501FF","#C65C75FF")
+  COLS2=c("#56519640","#20550140","#C65C7540")
+  for (i in 1:3){
+    PMs=unique(SIM1$PM)
+    P=SIM1$PM[SIM1$size==S]==PMs[i]
+    X=!is.na(MEAN[P])&!is.na(UP95[P])&!is.na(BOTTOM95[P])
+    polygon(x=c((1:8)[X],rev((1:8)[X])),y=c(UP95[P][X],rev(BOTTOM95[P][X])), border=F,col=COLS2[i])
+    lines((1:8)[X],MEAN[P][X],lwd=2,col=COLS[i])
+  }
+}
+plot(NA,xlim = c(0,1),ylim=c(0,1), bty = 'n', type = 'n', xaxt = 'n', yaxt = 'n',pch=NA,ann = F)
+legend(x =0,y=0.8,legend = c("Log-normal","Linear Decrease","Equiprobable"),col=c(COLS[1],COLS[2],COLS[3]),pch=15,cex=2.5,pt.cex=5,bty = "n")
+```
+
+# MATRIX SIZE: 5 x 5
+
+## Quantitative indices
+
+```{r,fig.height=7, fig.width=9, echo=F}
+layout(matrix(c(1:4),2,2,byrow = T))
+par(mar=c(4.2,6,2,1))
+S=5
+indices=c("wnodf","wnoda","SR")
+nam=c("WNODF","WNODA","Spectral Radius")
+for (N in 1:3){
+  index=indices[N]
+  MEAN=SIM1[[paste("mean.",index,sep="")]][SIM1$size==S]
+  UP95=SIM1[[paste("q975.",index,sep="")]][SIM1$size==S]
+  BOTTOM95=SIM1[[paste("q025.",index,sep="")]][SIM1$size==S]
+  if(is.element(index,c("MD","SR","binSR"))){
+    YLIM=c(min(c(MEAN,UP95,BOTTOM95),na.rm=T),max(c(MEAN,UP95,BOTTOM95),na.rm=T))
+  }else{YLIM=c(0,1)}
+  plot(0,xlim = c(0.5,8),ylim=YLIM, bty = 'n', type = 'n', xaxt = 'n', yaxt = 'n',pch=NA, xlab="sampling",ylab=nam[N],cex.lab=1.7)
+  box()
+  axis(side = 1,lwd=1,at = 1:8,labels = c("50","100","200","400","800","1600","3200","6400"))
+  axis(side=2,lwd=1)
+  COLS=c("#565196FF","#205501FF","#C65C75FF")
+  COLS2=c("#56519640","#20550140","#C65C7540")
+  for (i in 1:3){
+    PMs=unique(SIM1$PM)
+    P=SIM1$PM[SIM1$size==S]==PMs[i]
+    X=!is.na(MEAN[P])&!is.na(UP95[P])&!is.na(BOTTOM95[P])
+    polygon(x=c((1:8)[X],rev((1:8)[X])),y=c(UP95[P][X],rev(BOTTOM95[P][X])), border=F,col=COLS2[i])
+    lines((1:8)[X],MEAN[P][X],lwd=2,col=COLS[i])
+  }
+}
+plot(NA,xlim = c(0,1),ylim=c(0,1), bty = 'n', type = 'n', xaxt = 'n', yaxt = 'n',pch=NA,ann = F)
+legend(x =0,y=0.8,legend = c("Log-normal","Linear Decrease","Equiprobable"),col=c(COLS[1],COLS[2],COLS[3]),pch=15,cex=2.5,pt.cex=5,bty = "n")
+```
+
+## Binary indices
+
+```{r,fig.height=13.3, fig.width=9, echo=F}
+layout(matrix(c(1:6,0,7),4,2,byrow = T))
+par(mar=c(4.2,6,2,1))
+S=5
+indices=c("betasne","betasne_prop","temp","nodf","MD","binSR")
+nam=c(expression(paste(beta,scriptstyle("NES"))), expression(paste(beta,scriptstyle("NES")," / ", beta,scriptstyle("SOR"))),"Temperature","NODF","Manhattan Distance","Binary Spectral Radius")
+for (N in 1:6){
+  index=indices[N]
+  MEAN=SIM1[[paste("mean.",index,sep="")]][SIM1$size==S]
+  UP95=SIM1[[paste("q975.",index,sep="")]][SIM1$size==S]
+  BOTTOM95=SIM1[[paste("q025.",index,sep="")]][SIM1$size==S]
+  if(is.element(index,c("MD","SR","binSR"))){
+    YLIM=c(min(c(MEAN,UP95,BOTTOM95),na.rm=T),max(c(MEAN,UP95,BOTTOM95),na.rm=T))
+  }else{YLIM=c(0,1)}
+  plot(0,xlim = c(0.5,8),ylim=YLIM, bty = 'n', type = 'n', xaxt = 'n', yaxt = 'n',pch=NA, xlab="sampling",ylab=nam[N],cex.lab=1.7)
+  box()
+  axis(side = 1,lwd=1,at = 1:8,labels = c("50","100","200","400","800","1600","3200","6400"))
+  axis(side=2,lwd=1)
+  COLS=c("#565196FF","#205501FF","#C65C75FF")
+  COLS2=c("#56519640","#20550140","#C65C7540")
+  for (i in 1:3){
+    PMs=unique(SIM1$PM)
+    P=SIM1$PM[SIM1$size==S]==PMs[i]
+    X=!is.na(MEAN[P])&!is.na(UP95[P])&!is.na(BOTTOM95[P])
+    polygon(x=c((1:8)[X],rev((1:8)[X])),y=c(UP95[P][X],rev(BOTTOM95[P][X])), border=F,col=COLS2[i])
+    lines((1:8)[X],MEAN[P][X],lwd=2,col=COLS[i])
+  }
+}
+plot(NA,xlim = c(0,1),ylim=c(0,1), bty = 'n', type = 'n', xaxt = 'n', yaxt = 'n',pch=NA,ann = F)
+legend(x =0,y=0.8,legend = c("Log-normal","Linear Decrease","Equiprobable"),col=c(COLS[1],COLS[2],COLS[3]),pch=15,cex=2.5,pt.cex=5,bty = "n")
+```
+
