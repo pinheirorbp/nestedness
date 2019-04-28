@@ -143,7 +143,7 @@ simulations=foreach(N=1:720,.packages =c("bipartite","betapart","vegan"))%dopar%
   results$betasor[I]=beta.multi(netBin)$beta.SOR#6
   results$temp[I]=1-bipartite::networklevel(netBin, index="nestedness")/100#7
   results$nodf[I]=vegan::nestednodf(netBin)$statistic[[3]]/100#8
-  # quantitative
+  # weighted
   results$wnodf[I]=nest.smdm(x = net,weights = T,decreasing = "fill",sort = T)$WNODFmatrix[1]/100#12
   results$wnoda[I]=nest.smdm(x = net,weights = T,decreasing = "abund",sort = T)$WNODAmatrix[1]/100#13
   results$SR[I]=SPECTRAL_RADIUS(net)#16

@@ -1,8 +1,11 @@
 ---
-title: "Appendix S2 - Efficiency of metrics to distinguish between quantitative random and nested networks"
+title: Appendix S1 - Efficiency of metrics to distinguish between weighted random
+  and nested matrices
 author: "Pinheiro, R.B.P., Dormann,C.F., Felix, G.M.F, and Mello, M.A.R."
 date: "March 18, 2019"
-output: pdf_document
+output:
+  pdf_document: default
+  word_document: default
 ---
 
 ```{r include=F}
@@ -10,17 +13,17 @@ load("results/simulations1.RData")
 ```
 # METHODS #
 
-In our novel perspective, the main function of a nestedness metric is to distinguish between networks with randomly distributed links (non-significant nestedness, equiprobable null model), networks in which links are partially defined by the node strengths (significant nestedness), and networks in which links are fully determined by node strengths (nested networks, proportional null model). Here, we analyzed the capacity of several indices in distinguishing these topologies.
+In our novel perspective, the main function of a nestedness metric is to distinguish between matrices with randomly distributed cell values (non-significant nestedness, equiprobable null model), matrices in which cell values are partially defined by the marginal sums (significant nestedness), and matrices in which cell values are fully determined by marginal sums (nested matrices, proportional null model). Here, we analyzed the capacity of several indices in distinguishing these topologies.
 
-We produced probability matrices with dimensions: 5x5, 10x10, and 20x20, based on three different marginal probabilities: lognormal, linear decrease, and equiprobable. Then, we generated networks from these probability matrices with different total samplings: 50, 100, 200, 400, 800, 1600, 3200, and 6400. For each unique setup we produced 10,000 networks. For each network we calculated a set of nestedness indices (Table 1 in Methods).
+We produced probability matrices with dimensions: 5x5, 10x10, and 20x20, based on three different marginal probabilities: lognormal, linear decrease, and equiprobable. Then, we generated matrices from these probability matrices with different total samplings: 50, 100, 200, 400, 800, 1600, 3200, and 6400. For each unique setup we produced 10,000 matrices. For each matrix we calculated a set of nestedness indices (Table 1 in Methods).
 
-In this analysis we used both quantitative and binary indices. However, the models were always produced using the quantitative information, and indices are compared between networks with fixed sampling (instead of connectance). For a comparison of binary indices in networks with fixed connectances, see Appendix S2.
+In this analysis we used both weighted and binary indices. However, the models were always produced using the weighted information, and indices are compared between matrices with fixed sampling (instead of connectance). For a comparison of binary indices in matrices with fixed connectances, see Appendix S2.
 
-Here we present plots for a graphycal evaluation of the capacity of binary indices to separate between the proportional (lognormal and linear decrease) and the equiprobable null models. Indices in the y-axis and sampling (total weights on the network) on the x-axis. Each plot present median and intervals containing 95% of points. NODF, WNODF and WNODA values were divided by 100. For temperature we present 1 minus the raw value divided by 100 (so that it is directly related to nestedness).
+Here we present plots for a graphycal evaluation of the capacity of binary indices to separate between the proportional (lognormal and linear decrease) and the equiprobable null models. Indices in the y-axis and sampling (total weights on the matrix) on the x-axis. Each plot present median and intervals containing 95% of points. NODF, WNODF and WNODA values were divided by 100. For temperature we present 1 minus the raw value divided by 100 (so that it is directly related to nestedness).
 
 # MATRIX SIZE: 20 x 20
 
-## Quantitative indices
+## Weighted indices
 
 ```{r,fig.height=7, fig.width=9, echo=F}
 layout(matrix(c(1:4),2,2,byrow = T))
@@ -90,7 +93,7 @@ legend(x =0,y=0.8,legend = c("Log-normal","Linear Decrease","Equiprobable"),col=
 
 # MATRIX SIZE: 10 x 10
 
-## Quantitative indices
+## Weighted indices
 
 ```{r,fig.height=7, fig.width=9, echo=F}
 layout(matrix(c(1:4),2,2,byrow = T))
@@ -160,7 +163,7 @@ legend(x =0,y=0.8,legend = c("Log-normal","Linear Decrease","Equiprobable"),col=
 
 # MATRIX SIZE: 5 x 5
 
-## Quantitative indices
+## Weighted indices
 
 ```{r,fig.height=7, fig.width=9, echo=F}
 layout(matrix(c(1:4),2,2,byrow = T))

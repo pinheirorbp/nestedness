@@ -88,7 +88,7 @@ nestnulls=function(M, index="wnoda",equi.null=T, prop.null=T, n.null=1000, calc.
         constrains=NULL
       }
       if (!is.null(constrains)&length(constrains)!=nrow(x)+ncol(x)){
-        stop("constrains vector is not of the same length that network vertices")
+        stop("constrains vector is not of the same length that matrix dimensions")
       }
       if (weights==F&any(x!=0&x!=1)){
         x[x>0]=1

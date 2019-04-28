@@ -1,19 +1,22 @@
 ---
-title: "Appendix S3- Efficiency of metrics to distinguish between binary random and nested networks"
+title: Appendix S2- Efficiency of metrics to distinguish between binary random and
+  nested matrices
 author: "Pinheiro, R.B.P., Dormann,C.F., Felix, G.M.F, and Mello, M.A.R."
 date: "March 18, 2019"
-output: pdf_document
+output:
+  pdf_document: default
+  word_document: default
 ---
 
 # METHODS #
 
-In our novel perspective, the main function of a nestedness metric is to distinguish between networks with randomly distributed links (non-significant nestedness, equiprobable null model), networks in which links are partially defined by the node strengths (significant nestedness), and networks in which links are fully determined by node strengths (nested networks, proportional null model). Here, we analyzed the capacity of several indices in distinguishing these topologies.
+In our novel perspective, the main function of a nestedness metric is to distinguish between matrices with randomly distributed cell values (non-significant nestedness, equiprobable null model), matrices in which cell values are partially defined by the marginal sums (significant nestedness), and matrices in which cell values are fully determined by marginal sums (nested matrices, proportional null model). Here, we analyzed the capacity of several indices in distinguishing these topologies.
 
-We produced probability matrices with dimensions: 5x5, 10x10, and 20x20, based on three different marginal probabilities: lognormal, linear decrease, and equiprobable. In Appendix S1 we generated quantitative networks from these probability matrices with fixed total sampling. Here, we produced binary matrices for a more appropriate comparison of binary metrics.
+We produced probability matrices with dimensions: 5x5, 10x10, and 20x20, based on three different marginal probabilities: lognormal, linear decrease, and equiprobable. In Appendix S1 we generated weighted matrices from these probability matrices with fixed total sampling. Here, we produced binary matrices for a more appropriate comparison of binary metrics.
 
-As binary matrices do not present quantitative information we can only fix the connectance. We produced binary networks with connectances: 0.3, 0.5, 0.7, 0.9, 0.92, 0.94, 0.96, and 0.98. For each network we calculated a set of binary nestedness indices (Table 1 in Methods).
+As binary matrices do not present weighted information we can only fix the connectance. We produced binary matrices with connectances: 0.3, 0.5, 0.7, 0.9, 0.92, 0.94, 0.96, and 0.98. For each matrix we calculated a set of binary nestedness indices (Table 1 in Methods).
 
-Moreover, in analysis of binary matrices, we cannot know the original node probabilities, only node degrees. To inspect the distortion caused by this approximation, for each matrix produced with fixed connectance, we produced a randomized matrix using a proportional algorithm based on node degrees (binary proportional). 
+Moreover, in analysis of binary matrices, we cannot know the original marginal probabilities, only the binary marginal sums (node degrees). To inspect the distortion caused by this approximation, for each matrix produced with fixed connectance, we produced a randomized matrix using a proportional algorithm based on binary marginal sums (binary proportional). 
 
 Here we present plots for a graphycal evaluation of the capacity of binary indices to separate between the proportional (lognormal and linear decrease) and the equiprobable null models. We also present values of the binary proportional null model. Indices in the y-axis and connectance on the x-axis. Each plot present median and intervals containing 95% of points. NODF values were divided by 100. For temperature we present 1 minus the raw value divided by 100 (so that it is directly related to nestedness).
 
