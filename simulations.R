@@ -2,7 +2,7 @@
 
 #Rafael Barros Pereira Pinheiro 
 #Carsten F. Dormann 
-#Gabriel Moreira F?lix Ferreira
+#Gabriel Moreira Felix Ferreira
 #Marco Aurelio Ribeiro Mello 
 
 # Contact: rafael-bpp@hotmail.com
@@ -16,7 +16,7 @@
 ## The easiest way to run this code without paralelizing is by registring only 1 core [registerDoParallel(cores=1)], but be prepared because it may take a LONG time.
 ## On the other hand, if you are interested in applying these methods to a given system, the function nestnull (file= nestnull.R) is probable the best choice, not this script.
 
-## This script run the simulations. 
+## This script runs the simulations. 
 ## To produce the plots, use the R Markdown files: Appendix_S2.Rmd and Appendix_S3.Rmd
 
 #### Packages / functions ####
@@ -24,7 +24,6 @@ library(sads)
 library(bipartite)
 library(betapart)
 library(doParallel)
-source("functions/nest.smdm.R")
 source("functions/SR_MD_Becket.R")
 
 ### Probability Matrices ####
@@ -144,9 +143,9 @@ simulations=foreach(N=1:720,.packages =c("bipartite","betapart","vegan"))%dopar%
   results$temp[I]=1-bipartite::networklevel(netBin, index="nestedness")/100#7
   results$nodf[I]=vegan::nestednodf(netBin)$statistic[[3]]/100#8
   # weighted
-  results$wnodf[I]=nest.smdm(x = net,weights = T,decreasing = "fill",sort = T)$WNODFmatrix[1]/100#12
-  results$wnoda[I]=nest.smdm(x = net,weights = T,decreasing = "abund",sort = T)$WNODAmatrix[1]/100#13
-  results$SR[I]=SPECTRAL_RADIUS(net)#16
+  results$wnodf[I]=nest.smdm(x = net,weighted = T,decreasing = "fill",sort = T)$WNODFmatrix[1]/100#9
+  results$wnoda[I]=nest.smdm(x = net,weighted = T,decreasing = "abund",sort = T)$WNODAmatrix[1]/100#10
+  results$SR[I]=SPECTRAL_RADIUS(net)#11
   }
   ## Saving results ##
   fileID=paste("simulations/part1/simsID",N,".RData",sep = "")
@@ -189,17 +188,17 @@ simulations=foreach(N=1:720,.packages =c("bipartite","betapart","vegan"))%dopar%
     }
   # network
   results$net[[I]]=net #0
-  results$ndiscarded[I]=ndiscarded#0.1
+  results$ndiscarded[I]=ndiscarded#1
   ## indices ##
-  results$nrow[I]=nrow(net)#1
-  results$ncol[I]=ncol(net)#2
-  results$connectance[I]=bipartite::networklevel(net,index = "connectance")#3
+  results$nrow[I]=nrow(net)#2
+  results$ncol[I]=ncol(net)#3
+  results$connectance[I]=bipartite::networklevel(net,index = "connectance")#4
   # binary
-  results$betasim[I]=beta.multi(net)$beta.SIM#4
-  results$betasne[I]=beta.multi(net)$beta.SNE#5
-  results$betasor[I]=beta.multi(net)$beta.SOR#6
-  results$temp[I]=1-bipartite::networklevel(net, index="nestedness")/100#7
-  results$nodf[I]=vegan::nestednodf(net)$statistic[[3]]/100#8
+  results$betasim[I]=beta.multi(net)$beta.SIM#5
+  results$betasne[I]=beta.multi(net)$beta.SNE#6
+  results$betasor[I]=beta.multi(net)$beta.SOR#7
+  results$temp[I]=1-bipartite::networklevel(net, index="nestedness")/100#8
+  results$nodf[I]=vegan::nestednodf(net)$statistic[[3]]/100#9
   results$MD[I]=MANHATTAN_DISTANCE(net)#10
   results$binSR[I]=SPECTRAL_RADIUS(net)#11
   }
@@ -250,17 +249,17 @@ simulations=foreach(N=1:720,.packages =c("bipartite","betapart","vegan"))%dopar%
     }
     # network
     results$net[[I]]=net #0
-    results$ndiscarded[I]=ndiscarded#0.1
+    results$ndiscarded[I]=ndiscarded#1
     ## indices ##
-    results$nrow[I]=nrow(net)#1
-    results$ncol[I]=ncol(net)#2
-    results$connectance[I]=bipartite::networklevel(net,index = "connectance")#3
+    results$nrow[I]=nrow(net)#2
+    results$ncol[I]=ncol(net)#3
+    results$connectance[I]=bipartite::networklevel(net,index = "connectance")#4
     # binary
-    results$betasim[I]=beta.multi(net)$beta.SIM#4
-    results$betasne[I]=beta.multi(net)$beta.SNE#5
-    results$betasor[I]=beta.multi(net)$beta.SOR#6
-    results$temp[I]=1-bipartite::networklevel(net, index="nestedness")/100#7
-    results$nodf[I]=vegan::nestednodf(net)$statistic[[3]]/100#8
+    results$betasim[I]=beta.multi(net)$beta.SIM#5
+    results$betasne[I]=beta.multi(net)$beta.SNE#6
+    results$betasor[I]=beta.multi(net)$beta.SOR#7
+    results$temp[I]=1-bipartite::networklevel(net, index="nestedness")/100#8
+    results$nodf[I]=vegan::nestednodf(net)$statistic[[3]]/100#9
     results$MD[I]=MANHATTAN_DISTANCE(net)#10
     results$binSR[I]=SPECTRAL_RADIUS(net)#11
   }
@@ -286,13 +285,13 @@ SIM1$size= rep(c(20,10,5),each=24)
     SIMID=paste("simulations/part1/simsID",((i-1)*10)+j,".RData",sep="")
     load(SIMID)
     if(j==1){INDICES=results[-1]}else{
-      for (k in 1:13){
+      for (k in 1:11){
         INDICES[[k]][(((j-1)*1000)+1):(j*1000)]=results[[k+1]]
       }}}
   rm(results,j,SIMID,k)
   # Summaries for the values for each setup
-  for(k in 1:14){
-    if(k==14){
+  for(k in 1:12){
+    if(k==12){
       # proportional betanes
       options(warn=-1)
       INDICE=as.numeric(INDICES$betasne/INDICES$betasor)
