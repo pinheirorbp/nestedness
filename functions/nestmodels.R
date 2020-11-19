@@ -228,7 +228,7 @@ nestmodels=function(M, index="wnoda",equi.model=T, prop.model=T, n.model=1000, c
   if(equi.model){
     for (i in 1:length(calc.at)){
       SAM=names(equimodel)[i]
-      summary.equi[[SAM]]$nnull=sum(!is.na(equimodel[[i]]))
+      summary.equi[[SAM]]$nmodel=sum(!is.na(equimodel[[i]]))
       summary.equi[[SAM]]$mean.equi=mean(equimodel[[i]], na.rm = T)
       summary.equi[[SAM]]$sd.equi=sd(equimodel[[i]], na.rm = T)
       summary.equi[[SAM]]$plus95.equi=quantile(equimodel[[i]], na.rm = T, probs = 0.975)[[1]]
