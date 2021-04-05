@@ -18,20 +18,20 @@ source("functions/nestmodels.R")
 ### Plot of the matrix ####
 plotmatrix(net1, binary=F, within_color = "#0e0a44FF",base_color = "#d7d6e9ff")
 ### WNODF ####
-WNODF=nestmodels(M=net1,index="wnodf",prop.model = T,n.model = 1000,calc.at = c(50,100,200,300,400,444), print.at.each = 100,density.plot = T,sampling.plot = T)
+WNODF=nestmodels(M=net1,index="wnodf",prop.model = T,n.model = 10000,calc.at = c(50,100,200,300,400,444), print.at.each = 100,density.plot = T,sampling.plot = T)
 WNODF$observed
 WNODF$significance
 ### WNODA ####
-WNODA=nestmodels(M=net1,index="wnoda",prop.model = T,n.model = 1000,print.at.each = 10,density.plot = T,sampling.plot = T,calc.at = c(50,100,200,300,400,444))
+WNODA=nestmodels(M=net1,index="wnoda",prop.model = T,n.model = 10000,print.at.each = 10,density.plot = T,sampling.plot = T,calc.at = c(50,100,200,300,400,444))
 WNODA$observed
 WNODA$significance
 ### NODF ####
 # Accounting for weighted marginal sums
-NODF1=nestmodels(M=net1,index="nodf",prop.model = T,n.model = 1000, print.at.each = 10,density.plot = T,equi.model = T,wprob = T,wsamp=F)
+NODF1=nestmodels(M=net1,index="nodf",prop.model = T,n.model = 10000, print.at.each = 10,density.plot = T,equi.model = T,wprob = T,wsamp=F)
 NODF1$observed
 NODF1$significance
 # Only binary information
-NODF2=nestmodels(M=net1,index="nodf",prop.model = T,n.model = 1000, print.at.each = 10,density.plot = T,equi.model = T,wprob = F,wsamp=F)
+NODF2=nestmodels(M=net1,index="nodf",prop.model = T,n.model = 10000, print.at.each = 10,density.plot = T,equi.model = T,wprob = F,wsamp=F)
 NODF2$observed
 NODF2$significance
 
