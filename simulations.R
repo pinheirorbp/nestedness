@@ -9,15 +9,15 @@
 
 ### Information ####
 
-# The code used to calculate Spectral Radius and Manhattan Distance was adapted from the FALCON package developed by Stephen Beckett. 
-# FALCON (Framework of Adaptive ensembLes for the Comparison Of Nestedness) package: https://github.com/sjbeckett/FALCON
 
 ## We used parallel processing to produce the simulations.
 ## The easiest way to run this code without paralelizing is by registring only 1 core [registerDoParallel(cores=1)], but be prepared because it may take a LONG time.
 ## On the other hand, if you are interested in applying these methods to a given system, the function nestnull (file= nestnull.R) is probable the best choice, not this script.
 
 ## This script runs the simulations. 
-## To produce the plots, use the R Markdown files: Appendix_S2.Rmd and Appendix_S3.Rmd
+## To produce the plots, use the R Markdown file: Appendix_S1.Rmd
+
+# At first we were aiming at a comparison among several nestedness indices. That is why many of them are calculated for each network in the simulations. However, in the end we decided to only analyze NODF, WNODF and WNODA. 
 
 #### Packages / functions ####
 library(sads)
