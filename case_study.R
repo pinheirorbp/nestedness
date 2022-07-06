@@ -1,25 +1,11 @@
 ################################################################################
 
-# Supplementary code and data from the study: Pinheiro, R. B. P., Dormann, 
-# C. F., Felix, G. M. F., & Mello M. A. R. Linking null models to hypotheses
-# to improve nestedness analysis. Submitted.
+# Supplementary code and data from the study Pinheiro et al. (Submitted).
+# See README for further info: 
+# https://github.com/pinheirorbp/nestedness#readme
 
 ################################################################################
 
-
-# Authors:
-
-# Rafael R. B. Pinheiro 
-# Carsten F. Dormann 
-# Gabriel M. Felix
-# Marco A. R. Mello 
-
-# Contact: rafael-bpp@hotmail.com
-
-# Ecological Synthesis Lab (SintECO): https://marcomellolab.wordpress.com.
-
-# See README for the complete user guide to our new protocol:
-# https://github.com/pinheirorbp/nestedness/blob/master/readme.pdf
 
 # Disclaimer: You may use this script freely for commercial or non-commercial 
 # purposes at your own risk. We assume no responsibility or liability for the 
@@ -32,7 +18,7 @@
 # lecture, and similar), please acknowledge the authors and cite the source.
 
 
-##### CASE STUDY #####
+############################ CASE STUDY ########################################
 
 
 # Use the following code to reproduce the case study presented in our paper.

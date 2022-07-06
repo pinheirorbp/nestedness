@@ -1,5 +1,5 @@
 ---
-title: "Tutorial do reproduce the case study from Pinheiro et al. (submitted)"
+title: "Tutorial to reproduce the case study from Pinheiro et al. (submitted)"
 output: pdf_document
 editor_options: 
   markdown: 
@@ -16,36 +16,8 @@ prettyNum(x, big.mark=",")
 
 # About
 
-Supplementary code and data from the study:
-
-*Pinheiro, R. B. P., Dormann, C. F., Felix, G. M. F., & Mello M. A. R.
-**Linking null models to hypotheses to improve nestedness analysis**.
-Submitted.*
-
-[Ecological Synthesis Lab](https://marcomellolab.wordpress.com)
-(SintECO)
-
-Authors: Rafael B. P. Pinheiro, Gabriel M. Felix, Carsten F. Dormann,
-and Marco A. R. Mello.
-
-E-mail:
-[rafael-bpp\@hotmail.com](mailto:rafael-bpp@hotmail.com){.email}.
-
-Published originaly on September 29th, 2021 (English version).
-
-Disclaimer: You may use this script freely for commercial or
-non-commercial purposes at your own risk. We assume no responsibility or
-liability for the use of this software, convey no license or title under
-any patent, copyright, or mask work right to the product. We reserve the
-right to make changes in the software without notification. We also make
-no representation or warranty that such application will be suitable for
-the specified use without further testing or modification. If this
-script helps you produce any academic work (paper, book, chapter,
-dissertation, monograph, thesis, report, talk, keynote, lecture, and
-similar), please acknowledge the authors and cite the source.
-
-See detailed instructions and further info in the [README
-file](https://github.com/pinheirorbp/nestedness/blob/master/readme.pdf).
+See [README](https://github.com/pinheirorbp/nestedness#readme) for
+further info.
 
 # General instructions
 
@@ -126,7 +98,7 @@ library(bipartite)
 
 ## Step 3
 
-Load our custom-made function to calculate nestedness and run the null
+Load our user-defined function to calculate nestedness and run the null
 models. Check out the comments in the respective R file to obtain
 detailed information about the function, including its arguments and
 options.
@@ -156,7 +128,7 @@ carefully. In our paper, we ran 10,000 iterations, but we suggest
 experimenting with smaller numbers first.
 
 ```{r matrices}
-matrices <- 10000 #This number will be the same for all functions
+matrices <- 1000 #This number will be the same for all functions
 ```
 
 ## Step 6
