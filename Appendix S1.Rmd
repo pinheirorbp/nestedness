@@ -1,7 +1,7 @@
 ---
-title: Appendix S1. Efficiency analysis
-author: "Pinheiro, R.B.P., Dormann,C.F., Felix, G.M.F, and Mello, M.A.R."
-date: "November 27, 2021"
+title: Appendix S1. Efficacy analysis
+author: "[AUTHOR NAMES REMOVED FOR REVIEW]"
+date: "October 10, 2022"
 output:
   pdf_document: default
   word_document: default
@@ -10,7 +10,7 @@ output:
 ```{r include=F}
 load("results/simulations1.RData")
 ```
-# WEIGHTED MATRICES #
+# WEIGHTED INCIDENCE MATRICES #
 
 In our novel perspective, the main objective of a nestedness test is to distinguish between matrices with randomly distributed cell values (non-significant nestedness, equiprobable model), matrices in which cell values are partially defined by the marginal sums (significant nestedness), and matrices in which cell values are fully determined by marginal sums (nested matrices, proportional model). Here, we analyzed the capacity of several indices in distinguishing these topologies following our protocol.
 
@@ -18,7 +18,7 @@ We produced probability matrices with dimensions: 5x5, 10x10, and 20x20, based o
 
 In this analysis we used both weighted (WNODF and WNODA) and binary (NODF) indices. However, the models were always produced using the weighted information, and indices are compared between matrices with fixed sampling (instead of connectance).
 
-Here we present plots for a graphycal evaluation of the efficiency to separate between the proportional (lognormal and linear decrease) and the equiprobable models. Indices in the y-axis and sampling (total weights on the matrix) on the x-axis. Each plot present median and intervals containing 95% of points. NODF, WNODF and WNODA values were divided by 100.
+Here we present plots for a graphycal evaluation of the efficacy to separate between the proportional (lognormal and linear decrease) and the equiprobable models. Indices in the y-axis and sampling (total weights on the matrix) on the x-axis. Each plot present median and intervals containing 95% of points. NODF, WNODF and WNODA values were divided by 100.
 
 ## MATRIX SIZE: 20 x 20
 
@@ -118,7 +118,7 @@ legend(x =0,y=0.8,legend = c("Log-normal","Linear Decrease","Equiprobable"),col=
 
 \newpage
 
-# BINARY MATRICES #
+# BINARY INCIDENCE MATRICES #
 
 
 In our novel perspective, the main function of a nestedness test is to distinguish between matrices with randomly distributed cell values (non-significant nestedness, equiprobable model), matrices in which cell values are partially defined by the marginal sums (significant nestedness), and matrices in which cell values are fully determined by marginal sums (nested matrices, proportional model). Here, we analyzed the capacity of NODF in distinguishing these topologies following our protocol.
@@ -129,7 +129,7 @@ As binary matrices do not present weighted information we can only fix the conne
 
 Moreover, in analysis of binary matrices, we cannot know the original marginal probabilities, only the binary marginal sums (node degrees). To inspect the distortion caused by this approximation, for each matrix produced with fixed connectance, we produced a randomized matrix using a proportional algorithm based on binary marginal sums (binary proportional). 
 
-Here we present plots for a graphycal evaluation of the capacity to separate between the proportional (lognormal and linear decrease) and the equiprobable null models. We also present values of the binary proportional null model. Indices in the y-axis and connectance on the x-axis. Each plot present median and intervals containing 95% of points. NODF values were divided by 100.
+Here we present plots for a graphical evaluation of the capacity to separate between the proportional (lognormal and linear decrease) and the equiprobable null models. We also present values of the binary proportional null model. Indices in the y-axis and connectance on the x-axis. Each plot present median and intervals containing 95% of points. NODF values were divided by 100.
 
 
 ```{r include=F}
